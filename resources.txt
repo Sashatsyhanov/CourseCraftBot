@@ -1,0 +1,599 @@
+Метод волка с Уолл-стрит
+Jordan Belfort
+book
+Книга о техниках продаж и убеждения от брокера с Уолл-стрит.
+продажи, убеждение, бизнес
+
+SPIN Selling
+Neil Rackham
+book
+Методология продаж через вопросы для крупных сделок.
+продажи, B2B, техника
+
+To Sell Is Human
+Daniel H. Pink
+book
+Почему умение продавать — это человеческая черта.
+продажи, психология, навыки
+
+The Challenger Sale
+Matthew Dixon
+book
+Как оспаривать клиента, чтобы закрывать сделки.
+продажи, стратегия, B2B
+
+Influence
+Robert B. Cialdini
+book
+Психология влияния и убеждения в продажах.
+продажи, психология, влияние
+
+Never Split the Difference
+Chris Voss
+book
+Техники переговоров от агента ФБР для продаж.
+продажи, переговоры, убеждение
+
+The Psychology of Selling
+Brian Tracy
+book
+Как увеличить продажи через психологию.
+продажи, мотивация, психология
+
+Selling to Big Companies
+Jill Konrath
+book
+Стратегии продаж крупным клиентам.
+продажи, B2B, бизнес
+
+Fanatical Prospecting
+Jeb Blount
+book
+Как находить клиентов и строить воронку продаж.
+продажи, лидогенерация, техника
+
+Secrets of Closing the Sale
+Zig Ziglar
+book
+Искусство закрытия сделок от мастера продаж.
+продажи, техника, мотивация
+
+Основы маркетинга
+Philip Kotler
+book
+Классическое руководство по маркетингу: стратегии и анализ.
+маркетинг, стратегия, бизнес
+
+This Is Marketing
+Seth Godin
+book
+Современный взгляд на маркетинг и создание ценности.
+маркетинг, брендинг, психология
+
+Contagious
+Jonah Berger
+book
+Почему идеи становятся вирусными и как это использовать.
+маркетинг, виральность, психология
+
+Building a StoryBrand
+Donald Miller
+book
+Как рассказывать истории для продвижения бренда.
+маркетинг, сторителлинг, брендинг
+
+The 22 Immutable Laws of Marketing
+Al Ries
+book
+Законы маркетинга, проверенные временем.
+маркетинг, стратегия, позиционирование
+
+Purple Cow
+Seth Godin
+book
+Как выделиться на рынке и стать уникальным.
+маркетинг, инновации, брендинг
+
+Ogilvy on Advertising
+David Ogilvy
+book
+Классика рекламы от легендарного копирайтера.
+маркетинг, реклама, копирайтинг
+
+Crossing the Chasm
+Geoffrey A. Moore
+book
+Маркетинг высокотехнологичных продуктов.
+маркетинг, технологии, стратегия
+
+Digital Marketing for Dummies
+Ryan Deiss
+book
+Основы цифрового маркетинга для всех.
+маркетинг, digital, стратегия
+
+Hacking Growth
+Sean Ellis
+book
+Как ускорить рост через маркетинг и эксперименты.
+маркетинг, рост, стартапы
+
+Python Crash Course
+Eric Matthes
+book
+Полный курс по Python: основы и анализ данных.
+программирование, Python, технологии
+
+Clean Code
+Robert C. Martin
+book
+Как писать чистый и понятный код.
+программирование, кодинг, качество
+
+The Pragmatic Programmer
+Andrew Hunt
+book
+Практические советы для разработчиков.
+программирование, навыки, технологии
+
+You Don’t Know JS
+Kyle Simpson
+book
+Глубокое погружение в JavaScript.
+программирование, JavaScript, веб
+
+Design Patterns
+Erich Gamma
+book
+Классические шаблоны проектирования ПО.
+программирование, архитектура, технологии
+
+Introduction to Algorithms
+Thomas H. Cormen
+book
+Основы алгоритмов и структур данных.
+программирование, алгоритмы, наука
+
+Code Complete
+Steve McConnell
+book
+Руководство по созданию качественного кода.
+программирование, кодинг, навыки
+
+Refactoring
+Martin Fowler
+book
+Как улучшать существующий код.
+программирование, рефакторинг, качество
+
+Learning Python
+Mark Lutz
+book
+Подробное руководство по Python для всех уровней.
+программирование, Python, обучение
+
+The Art of Computer Programming
+Donald Knuth
+book
+Фундаментальная работа по программированию.
+программирование, алгоритмы, наука
+
+Самый богатый человек в Вавилоне
+George S. Clason
+book
+Финансовая мудрость через притчи.
+финансы, личные финансы, бизнес
+
+Rich Dad Poor Dad
+Robert Kiyosaki
+book
+Основы финансовой грамотности и мышления.
+финансы, инвестиции, психология
+
+The Intelligent Investor
+Benjamin Graham
+book
+Классика инвестирования от гуру Уоррена Баффета.
+финансы, инвестиции, стратегия
+
+A Random Walk Down Wall Street
+Burton G. Malkiel
+book
+Почему рынки непредсказуемы и как инвестировать.
+финансы, инвестиции, экономика
+
+Your Money or Your Life
+Vicki Robin
+book
+Как управлять финансами и жить свободно.
+финансы, личные финансы, минимализм
+
+The Millionaire Next Door
+Thomas J. Stanley
+book
+Как обычные люди становятся миллионерами.
+финансы, богатство, психология
+
+Financial Freedom
+Grant Sabatier
+book
+Путь к финансовой независимости за 5 лет.
+финансы, личные финансы, инвестиции
+
+Principles of Corporate Finance
+Richard A. Brealey
+book
+Основы корпоративных финансов.
+финансы, бизнес, экономика
+
+The Little Book of Common Sense Investing
+John C. Bogle
+book
+Почему индексные фонды — лучший выбор.
+финансы, инвестиции, стратегия
+
+Money Master the Game
+Tony Robbins
+book
+Финансовые советы от экспертов для всех.
+финансы, инвестиции, мотивация
+
+Договориться можно обо всём
+Gavin Kennedy
+book
+Практическое руководство по переговорам.
+переговоры, коммуникация, бизнес
+
+Getting to Yes
+Roger Fisher
+book
+Как достигать согласия без уступок.
+переговоры, стратегия, убеждение
+
+Never Split the Difference
+Chris Voss
+book
+Техники переговоров от агента ФБР.
+переговоры, продажи, психология
+
+Bargaining for Advantage
+G. Richard Shell
+book
+Как вести переговоры с выгодой для себя.
+переговоры, стратегия, бизнес
+
+Crucial Conversations
+Kerry Patterson
+book
+Как говорить, когда ставки высоки.
+переговоры, коммуникация, психология
+
+Negotiation Genius
+Deepak Malhotra
+book
+Как выигрывать в сложных переговорах.
+переговоры, стратегия, лидерство
+
+The Art of Negotiation
+Michael Wheeler
+book
+Динамичный подход к переговорам.
+переговоры, навыки, бизнес
+
+Beyond Reason
+Roger Fisher
+book
+Роль эмоций в переговорах.
+переговоры, психология, коммуникация
+
+Influence Without Authority
+Allan R. Cohen
+book
+Как договариваться без формальной власти.
+переговоры, лидерство, влияние
+
+Secrets of Power Negotiating
+Roger Dawson
+book
+Техники переговоров для успеха.
+переговоры, убеждение, бизнес
+
+Thinking, Fast and Slow
+Daniel Kahneman
+book
+Как работает мышление: быстрое и медленное.
+психология, принятие решений, наука
+
+Atomic Habits
+James Clear
+book
+Как создавать привычки и менять жизнь.
+психология, привычки, мотивация
+
+Mindset
+Carol S. Dweck
+book
+Почему мышление роста меняет успех.
+психология, развитие, мотивация
+
+Man’s Search for Meaning
+Viktor E. Frankl
+book
+Смысл жизни через призму концлагерей.
+психология, философия, мотивация
+
+The Power of Habit
+Charles Duhigg
+book
+Как привычки формируют нашу жизнь.
+психология, привычки, поведение
+
+Emotional Intelligence
+Daniel Goleman
+book
+Почему EQ важнее IQ.
+психология, эмоции, лидерство
+
+Grit
+Angela Duckworth
+book
+Сила упорства и страсти в достижении целей.
+психология, мотивация, успех
+
+Drive
+Daniel H. Pink
+book
+Что мотивирует нас на самом деле.
+психология, мотивация, работа
+
+The Subtle Art of Not Giving a F*ck
+Mark Manson
+book
+Как фокусироваться на важном.
+психология, минимализм, мотивация
+
+Flow
+Mihaly Csikszentmihalyi
+book
+Как достигать состояния потока.
+психология, продуктивность, счастье
+
+Leaders Eat Last
+Simon Sinek
+book
+Почему лидеры заботятся о команде первыми.
+лидерство, команда, мотивация
+
+The 7 Habits of Highly Effective People
+Stephen R. Covey
+book
+Привычки успешных лидеров.
+лидерство, эффективность, навыки
+
+Start with Why
+Simon Sinek
+book
+Как вдохновлять через "почему".
+лидерство, мотивация, стратегия
+
+Extreme Ownership
+Jocko Willink
+book
+Как брать ответственность за всё.
+лидерство, дисциплина, команда
+
+The Five Dysfunctions of a Team
+Patrick Lencioni
+book
+Как строить эффективные команды.
+лидерство, команда, бизнес
+
+Dare to Lead
+Brené Brown
+book
+Лидерство через уязвимость и смелость.
+лидерство, психология, мотивация
+
+Good to Great
+Jim Collins
+book
+Как компании становятся великими.
+лидерство, бизнес, стратегия
+
+The 21 Irrefutable Laws of Leadership
+John C. Maxwell
+book
+Законы лидерства для успеха.
+лидерство, навыки, мотивация
+
+Turn the Ship Around!
+L. David Marquet
+book
+Лидерство через делегирование.
+лидерство, команда, управление
+
+Measure What Matters
+John Doerr
+book
+Как цели (OKR) меняют лидерство.
+лидерство, управление, стратегия
+
+The Blue Zones
+Dan Buettner
+book
+Секреты долгожителей из "голубых зон".
+здоровье, долголетие, питание
+
+How Not to Die
+Michael Greger
+book
+Как питание предотвращает болезни.
+здоровье, питание, наука
+
+Why We Sleep
+Matthew Walker
+book
+Почему сон — ключ к здоровью.
+здоровье, сон, наука
+
+Breath
+James Nestor
+book
+Как дыхание влияет на здоровье.
+здоровье, дыхание, наука
+
+The Body Keeps the Score
+Bessel van der Kolk
+book
+Как травмы влияют на тело и разум.
+здоровье, психология, травмы
+
+Lifespan
+David A. Sinclair
+book
+Наука о старении и как его замедлить.
+здоровье, долголетие, биология
+
+Eat to Beat Disease
+William W. Li
+book
+Как еда защищает от болезней.
+здоровье, питание, наука
+
+Spark
+John J. Ratey
+book
+Как упражнения улучшают мозг.
+здоровье, фитнес, психология
+
+The Plant Paradox
+Steven R. Gundry
+book
+Как питание влияет на здоровье кишечника.
+здоровье, питание, наука
+
+Deep Nutrition
+Catherine Shanahan
+book
+Почему традиционная еда лечит.
+здоровье, питание, долголетие
+
+The War of Art
+Steven Pressfield
+book
+Как преодолевать сопротивление в творчестве.
+творчество, мотивация, искусство
+
+Big Magic
+Elizabeth Gilbert
+book
+Как жить творческой жизнью без страха.
+творчество, вдохновение, психология
+
+Steal Like an Artist
+Austin Kleon
+book
+Как вдохновляться и создавать своё.
+творчество, искусство, идеи
+
+The Artist’s Way
+Julia Cameron
+book
+Практический курс для развития творчества.
+творчество, вдохновение, навыки
+
+Creativity, Inc.
+Ed Catmull
+book
+Как Pixar управляет творчеством.
+творчество, бизнес, инновации
+
+Show Your Work!
+Austin Kleon
+book
+Как делиться творчеством и находить аудиторию.
+творчество, искусство, маркетинг
+
+The Creative Habit
+Twyla Tharp
+book
+Как превратить творчество в привычку.
+творчество, дисциплина, искусство
+
+Imagine
+Jonah Lehrer
+book
+Как рождаются творческие идеи.
+творчество, наука, психология
+
+Flow
+Mihaly Csikszentmihalyi
+book
+Состояние потока для творчества.
+творчество, продуктивность, психология
+
+Originals
+Adam Grant
+book
+Как быть оригинальным и менять мир.
+творчество, инновации, лидерство
+
+The Innovators
+Walter Isaacson
+book
+История цифровой революции и её героев.
+технологии, инновации, история
+
+Sapiens
+Yuval Noah Harari
+book
+Как технологии изменили человечество.
+технологии, история, психология
+
+The Singularity Is Near
+Ray Kurzweil
+book
+Будущее технологий и искусственного интеллекта.
+технологии, ИИ, футуризм
+
+Superintelligence
+Nick Bostrom
+book
+Риски и перспективы сверхразума.
+технологии, ИИ, философия
+
+Life 3.0
+Max Tegmark
+book
+Как ИИ изменит будущее человечества.
+технологии, ИИ, наука
+
+Elon Musk
+Ashlee Vance
+book
+Биография пионера технологий и инноваций.
+технологии, бизнес, лидерство
+
+The Fourth Industrial Revolution
+Klaus Schwab
+book
+Как технологии меняют экономику.
+технологии, экономика, будущее
+
+AI Superpowers
+Kai-Fu Lee
+book
+Борьба Китая и США в гонке ИИ.
+технологии, ИИ, геополитика
+
+Homo Deus
+Yuval Noah Harari
+book
+Куда технологии приведут человечество.
+технологии, будущее, философия
+
+The Lean Startup
+Eric Ries
+book
+Как создавать технологические стартапы.
+технологии, стартапы, бизнес
