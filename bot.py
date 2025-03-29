@@ -194,6 +194,24 @@ if __name__ == "__main__":
     dp.register_callback_query_handler(start_course_callback, lambda c: c.data == "start_course")
     dp.register_callback_query_handler(return_to_lesson_callback, lambda c: c.data == "return_to_lesson")
 
+    # Добавляем простой HTTP-сервер для пинга
+    from aiohttp import web
+    app = web.Application()
+    app.router.add_get('/', lambda request: web.Response(text="Bot is alive!"))
+
+    async def start_app():
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, '0.0.0.0', int(os.getenv("PORT", 8000)))
+        await site.start()
+
+    executor.start_polling(
+        dp,
+        skip_updates=True,
+        on_startup=lambda _: start_app(),
+        on_shutdown=on_shutdown
+    )
+
     # Настройки для Webhook
     WEBHOOK_HOST = os.getenv("RENDER_EXTERNAL_HOSTNAME", "https://coursecraftbot.onrender.com")
     WEBHOOK_PATH = "/webhook"
