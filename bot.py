@@ -122,6 +122,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
     await message.reply("Привет! Я CourseCraftBot — твой помощник в обучении! 🚀 Напиши /help, чтобы узнать, что я умею.")
     try:
         await course.start(message, None)  # Вызываем функцию start из course.py
+        logger.info(f"Функция course.start успешно выполнена для {message.from_user.id}")
     except Exception as e:
         logger.error(f"Ошибка в course.start: {e}")
         await message.reply("Произошла ошибка при запуске курса. Попробуй снова или напиши /help.")
@@ -190,6 +191,7 @@ async def start_course_callback(callback_query: types.CallbackQuery, state: FSMC
     await callback_query.message.reply("Начинаем курс! 🚀")
     try:
         await course.start(callback_query.message, None)  # Вызываем функцию start из course.py
+        logger.info(f"Функция course.start успешно выполнена для {callback_query.from_user.id} (callback)")
     except Exception as e:
         logger.error(f"Ошибка в course.start (callback): {e}")
         await callback_query.message.reply("Произошла ошибка при запуске курса. Попробуй снова или напиши /help.")
@@ -206,6 +208,7 @@ async def return_to_lesson_callback(callback_query: types.CallbackQuery, state: 
         await callback_query.message.reply("Возвращаемся к твоему курсу! 📚")
         try:
             await course.send_lesson(user_id, callback_query.message, bot)  # Вызываем функцию send_lesson из course.py
+            logger.info(f"Функция course.send_lesson успешно выполнена для {user_id}")
         except Exception as e:
             logger.error(f"Ошибка в course.send_lesson: {e}")
             await callback_query.message.reply("Произошла ошибка при загрузке урока. Попробуй снова или напиши /help.")
@@ -215,6 +218,7 @@ async def return_to_lesson_callback(callback_query: types.CallbackQuery, state: 
         await callback_query.message.reply("Курс не найден, начинаем новый! 🚀")
         try:
             await course.start(callback_query.message, None)  # Вызываем функцию start из course.py
+            logger.info(f"Функция course.start успешно выполнена для {user_id} (callback)")
         except Exception as e:
             logger.error(f"Ошибка в course.start (callback): {e}")
             await callback_query.message.reply("Произошла ошибка при запуске курса. Попробуй снова или напиши /help.")
@@ -236,6 +240,7 @@ async def on_startup(_):
     logger.info("Бот запущен!")
     try:
         course.register_course_handlers(dp, user_courses)  # Регистрируем обработчики из course.py
+        logger.info("Обработчики из course.py успешно зарегистрированы")
     except Exception as e:
         logger.error(f"Ошибка в course.register_course_handlers: {e}")
 
