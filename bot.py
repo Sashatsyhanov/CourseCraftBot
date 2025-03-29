@@ -1,13 +1,12 @@
 import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from handlers import course
-import os
-import aiosqlite
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
-from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils import executor
+import os
+import aiosqlite
+from aiohttp import web
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -38,6 +37,7 @@ except Exception as e:
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
+# Устанавливаем путь к базе данных
 DB_NAME = DATABASE_URL.replace("sqlite:///", "")  # Убираем префикс для SQLite
 
 # Кнопка для донатов
@@ -45,6 +45,7 @@ donate_button = types.InlineKeyboardMarkup().add(
     types.InlineKeyboardButton("Поддержать проект", url="https://yoomoney.ru/to/4100119062540797")
 )
 
+# Инициализация базы данных
 async def init_db():
     async with aiosqlite.connect(DB_NAME) as db:
         await db.execute("""
@@ -63,6 +64,7 @@ async def init_db():
         """)
         await db.commit()
 
+# Загрузка данных из базы
 async def load_user_courses():
     user_courses = {}
     async with aiosqlite.connect(DB_NAME) as db:
@@ -83,6 +85,7 @@ async def load_user_courses():
                 }
     return user_courses
 
+# Сохранение данных в базу
 async def save_user_course(user_id, course_data):
     async with aiosqlite.connect(DB_NAME) as db:
         await db.execute("""
@@ -96,20 +99,25 @@ async def save_user_course(user_id, course_data):
         ))
         await db.commit()
 
+# Клавиатура для возврата к курсу
 def get_return_keyboard(user_id):
     keyboard = types.InlineKeyboardMarkup()
-    if user_id in course.user_courses and course.user_courses[user_id].get("course"):
+    if user_id in user_courses and user_courses[user_id].get("course"):
         keyboard.add(types.InlineKeyboardButton("Вернуться к курсу", callback_data="return_to_lesson"))
     else:
         keyboard.add(types.InlineKeyboardButton("Начать курс", callback_data="start_course"))
     return keyboard
 
+# Команда /start
 @dp.message_handler(Command("start"))
 async def cmd_start(message: types.Message, state: FSMContext):
     logger.info(f"Команда /start от {message.from_user.id}")
     await state.finish()
-    await course.start(message, None)
+    await message.reply("Привет! Я CourseCraftBot — твой помощник в обучении! 🚀 Напиши /help, чтобы узнать, что я умею.")
+    # Здесь должен быть вызов функции start из handlers.py
+    # await course.start(message, None)
 
+# Команда /help
 @dp.message_handler(Command("help"))
 async def cmd_help(message: types.Message, state: FSMContext):
     logger.info(f"Команда /help от {message.from_user.id}")
@@ -133,9 +141,11 @@ async def cmd_help(message: types.Message, state: FSMContext):
     keyboard = get_return_keyboard(message.from_user.id)
     await message.reply(help_text, reply_markup=keyboard, parse_mode="HTML")
 
+# Состояние для обратной связи
 class FeedbackState(StatesGroup):
     waiting_for_feedback = State()
 
+# Команда /feedback
 @dp.message_handler(Command("feedback"))
 async def start_feedback(message: types.Message, state: FSMContext):
     logger.info(f"Команда /feedback от {message.from_user.id}")
@@ -144,6 +154,7 @@ async def start_feedback(message: types.Message, state: FSMContext):
     await message.reply("Напиши свой отзыв о курсе! Что понравилось, что улучшить?", reply_markup=keyboard)
     await FeedbackState.waiting_for_feedback.set()
 
+# Обработка отзыва
 @dp.message_handler(state=FeedbackState.waiting_for_feedback)
 async def process_feedback(message: types.Message, state: FSMContext):
     feedback = message.text
@@ -152,6 +163,7 @@ async def process_feedback(message: types.Message, state: FSMContext):
     await message.reply("Спасибо за отзыв!", reply_markup=keyboard)
     await state.finish()
 
+# Команда /donate
 @dp.message_handler(Command("donate"))
 async def send_donate(message: types.Message, state: FSMContext):
     logger.info(f"Команда /donate от {message.from_user.id}")
@@ -160,71 +172,64 @@ async def send_donate(message: types.Message, state: FSMContext):
     await message.reply("Спасибо за желание помочь! Поддержи проект здесь:", reply_markup=donate_button)
     await message.reply("Выбери действие:", reply_markup=keyboard)
 
-async def on_startup(_):
-    await init_db()
-    global user_courses
-    user_courses = await load_user_courses()
-    course.register_course_handlers(dp, user_courses)
-    logger.info("Бот запущен!")
-
-async def on_shutdown(_):
-    logger.info("Бот завершает работу...")
-
+# Callback для начала курса
 async def start_course_callback(callback_query: types.CallbackQuery, state: FSMContext):
     await state.finish()
     await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
-    await course.start(callback_query.message, None)
+    await callback_query.message.reply("Начинаем курс! 🚀")
+    # Здесь должен быть вызов функции start из handlers.py
+    # await course.start(callback_query.message, None)
     await callback_query.answer()
 
+# Callback для возврата к уроку
 async def return_to_lesson_callback(callback_query: types.CallbackQuery, state: FSMContext):
     await state.finish()
     user_id = callback_query.from_user.id
     logger.info(f"Возврат к курсу для user_id={user_id}")
-    if user_id in course.user_courses and course.user_courses[user_id].get("course"):
-        logger.info(f"Найден курс: {course.user_courses[user_id]}")
+    if user_id in user_courses and user_courses[user_id].get("course"):
+        logger.info(f"Найден курс: {user_courses[user_id]}")
         await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
-        await course.send_lesson(user_id, callback_query.message, bot)
+        await callback_query.message.reply("Возвращаемся к твоему курсу! 📚")
+        # Здесь должен быть вызов функции send_lesson из handlers.py
+        # await course.send_lesson(user_id, callback_query.message, bot)
     else:
         logger.info(f"Курс не найден для {user_id}, запускаем новый")
         await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
-        await course.start(callback_query.message, None)
+        await callback_query.message.reply("Курс не найден, начинаем новый! 🚀")
+        # Здесь должен быть вызов функции start из handlers.py
+        # await course.start(callback_query.message, None)
     await callback_query.answer()
 
+# Функции on_startup и on_shutdown
+async def on_startup(_):
+    await init_db()
+    global user_courses
+    user_courses = await load_user_courses()
+    logger.info("Бот запущен!")
+    # Здесь должен быть вызов функции для регистрации обработчиков из handlers.py
+    # course.register_course_handlers(dp, user_courses)
+
+async def on_shutdown(_):
+    logger.info("Бот завершает работу...")
+
+# HTTP-сервер для пинга UptimeRobot
+app = web.Application()
+app.router.add_get('/', lambda request: web.Response(text="Bot is alive!"))
+
+async def start_app():
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, '0.0.0.0', int(os.getenv("PORT", 8000)))
+    await site.start()
+
+# Запуск бота
 if __name__ == "__main__":
     dp.register_callback_query_handler(start_course_callback, lambda c: c.data == "start_course")
     dp.register_callback_query_handler(return_to_lesson_callback, lambda c: c.data == "return_to_lesson")
-
-    # Добавляем простой HTTP-сервер для пинга
-    from aiohttp import web
-    app = web.Application()
-    app.router.add_get('/', lambda request: web.Response(text="Bot is alive!"))
-
-    async def start_app():
-        runner = web.AppRunner(app)
-        await runner.setup()
-        site = web.TCPSite(runner, '0.0.0.0', int(os.getenv("PORT", 8000)))
-        await site.start()
 
     executor.start_polling(
         dp,
         skip_updates=True,
         on_startup=lambda _: start_app(),
         on_shutdown=on_shutdown
-    )
-
-    # Настройки для Webhook
-    WEBHOOK_HOST = os.getenv("RENDER_EXTERNAL_HOSTNAME", "https://coursecraftbot.onrender.com")
-    WEBHOOK_PATH = "/webhook"
-    WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
-    WEBAPP_HOST = "0.0.0.0"
-    WEBAPP_PORT = int(os.getenv("PORT", 8000))
-
-    executor.start_webhook(
-        dispatcher=dp,
-        webhook_path=WEBHOOK_PATH,
-        on_startup=on_startup,
-        on_shutdown=on_shutdown,
-        skip_updates=True,
-        host=WEBAPP_HOST,
-        port=WEBAPP_PORT,
     )
