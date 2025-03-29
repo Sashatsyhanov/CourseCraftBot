@@ -9,16 +9,28 @@ from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils import executor
 
-# Задаём переменные окружения прямо в коде
-os.environ["TELEGRAM_TOKEN"] = "7948372358:AAG8xCMLrFiDePOtiO-_niinJojHUQtED6c"
-os.environ["GEMINI_API_KEY"] = "AIzaSyDAV171VeefBOwq8Pc1tQ0peT956vVFhhE"
-os.environ["DATABASE_URL"] = "sqlite:///course_progress.db"
-
+# Настройка логирования
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Получаем переменные окружения
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Проверяем, что переменные окружения заданы
+if not TELEGRAM_TOKEN:
+    logger.error("TELEGRAM_TOKEN не задан в переменных окружения")
+    exit(1)
+if not GEMINI_API_KEY:
+    logger.error("GEMINI_API_KEY не задан в переменных окружения")
+    exit(1)
+if not DATABASE_URL:
+    logger.error("DATABASE_URL не задан в переменных окружения")
+    exit(1)
+
 try:
-    bot = Bot(token=os.getenv("TELEGRAM_TOKEN"))
+    bot = Bot(token=TELEGRAM_TOKEN)
 except Exception as e:
     logger.error(f"Ошибка при создании бота: {e}")
     exit(1)
@@ -26,7 +38,7 @@ except Exception as e:
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
-DB_NAME = "course_progress.db"
+DB_NAME = DATABASE_URL.replace("sqlite:///", "")  # Убираем префикс для SQLite
 
 # Кнопка для донатов
 donate_button = types.InlineKeyboardMarkup().add(
@@ -183,7 +195,7 @@ if __name__ == "__main__":
     dp.register_callback_query_handler(return_to_lesson_callback, lambda c: c.data == "return_to_lesson")
 
     # Настройки для Webhook
-    WEBHOOK_HOST = os.getenv("RENDER_EXTERNAL_HOSTNAME", "https://coursecraftbot.onrender.com")  # Замени на URL твоего приложения
+    WEBHOOK_HOST = os.getenv("RENDER_EXTERNAL_HOSTNAME", "https://coursecraftbot.onrender.com")
     WEBHOOK_PATH = "/webhook"
     WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
     WEBAPP_HOST = "0.0.0.0"
