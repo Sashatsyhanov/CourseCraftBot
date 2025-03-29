@@ -8,6 +8,7 @@ from aiogram.utils import executor
 import os
 import aiosqlite
 from aiohttp import web
+from handlers import course  # Импортируем модуль course из папки handlers
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -119,8 +120,11 @@ async def cmd_start(message: types.Message, state: FSMContext):
     logger.info(f"Команда /start от {message.from_user.id}")
     await state.finish()  # Сбрасываем состояние
     await message.reply("Привет! Я CourseCraftBot — твой помощник в обучении! 🚀 Напиши /help, чтобы узнать, что я умею.")
-    # Здесь должен быть вызов функции start из handlers.py
-    # await course.start(message, None)
+    try:
+        await course.start(message, None)  # Вызываем функцию start из course.py
+    except Exception as e:
+        logger.error(f"Ошибка в course.start: {e}")
+        await message.reply("Произошла ошибка при запуске курса. Попробуй снова или напиши /help.")
 
 # Команда /help
 @dp.message_handler(Command("help"))
@@ -184,8 +188,11 @@ async def start_course_callback(callback_query: types.CallbackQuery, state: FSMC
     await state.finish()
     await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
     await callback_query.message.reply("Начинаем курс! 🚀")
-    # Здесь должен быть вызов функции start из handlers.py
-    # await course.start(callback_query.message, None)
+    try:
+        await course.start(callback_query.message, None)  # Вызываем функцию start из course.py
+    except Exception as e:
+        logger.error(f"Ошибка в course.start (callback): {e}")
+        await callback_query.message.reply("Произошла ошибка при запуске курса. Попробуй снова или напиши /help.")
     await callback_query.answer()
 
 # Callback для возврата к уроку
@@ -197,14 +204,20 @@ async def return_to_lesson_callback(callback_query: types.CallbackQuery, state: 
         logger.info(f"Найден курс: {user_courses[user_id]}")
         await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
         await callback_query.message.reply("Возвращаемся к твоему курсу! 📚")
-        # Здесь должен быть вызов функции send_lesson из handlers.py
-        # await course.send_lesson(user_id, callback_query.message, bot)
+        try:
+            await course.send_lesson(user_id, callback_query.message, bot)  # Вызываем функцию send_lesson из course.py
+        except Exception as e:
+            logger.error(f"Ошибка в course.send_lesson: {e}")
+            await callback_query.message.reply("Произошла ошибка при загрузке урока. Попробуй снова или напиши /help.")
     else:
         logger.info(f"Курс не найден для {user_id}, запускаем новый")
         await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
         await callback_query.message.reply("Курс не найден, начинаем новый! 🚀")
-        # Здесь должен быть вызов функции start из handlers.py
-        # await course.start(callback_query.message, None)
+        try:
+            await course.start(callback_query.message, None)  # Вызываем функцию start из course.py
+        except Exception as e:
+            logger.error(f"Ошибка в course.start (callback): {e}")
+            await callback_query.message.reply("Произошла ошибка при запуске курса. Попробуй снова или напиши /help.")
     await callback_query.answer()
 
 # Обработчик всех текстовых сообщений (для отладки)
@@ -221,8 +234,10 @@ async def on_startup(_):
     global user_courses
     user_courses = await load_user_courses()
     logger.info("Бот запущен!")
-    # Здесь должен быть вызов функции для регистрации обработчиков из handlers.py
-    # course.register_course_handlers(dp, user_courses)
+    try:
+        course.register_course_handlers(dp, user_courses)  # Регистрируем обработчики из course.py
+    except Exception as e:
+        logger.error(f"Ошибка в course.register_course_handlers: {e}")
 
 async def on_shutdown(_):
     logger.info("Бот завершает работу...")
