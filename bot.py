@@ -2,7 +2,6 @@ import logging
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from handlers import course
-from dotenv import load_dotenv
 import os
 import aiosqlite
 from aiogram.dispatcher import FSMContext
@@ -10,8 +9,10 @@ from aiogram.dispatcher.filters import Command
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils import executor
 
-# Загружаем переменные из .env
-load_dotenv()
+# Задаём переменные окружения прямо в коде
+os.environ["TELEGRAM_TOKEN"] = "7948372358:AAG8xCMLrFiDePOtiO-_niinJojHUQtED6c"
+os.environ["GEMINI_API_KEY"] = "AIzaSyDAV171VeefBOwq8Pc1tQ0peT956vVFhhE"
+os.environ["DATABASE_URL"] = "sqlite:///course_progress.db"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -29,7 +30,7 @@ DB_NAME = "course_progress.db"
 
 # Кнопка для донатов
 donate_button = types.InlineKeyboardMarkup().add(
-    types.InlineKeyboardButton("Поддержать проект", url="https://yoomoney.ru/to/4100119062540797")  # Замени на свой счёт
+    types.InlineKeyboardButton("Поддержать проект", url="https://yoomoney.ru/to/4100119062540797")
 )
 
 async def init_db():
@@ -83,7 +84,6 @@ async def save_user_course(user_id, course_data):
         ))
         await db.commit()
 
-# Функция для создания клавиатуры возврата
 def get_return_keyboard(user_id):
     keyboard = types.InlineKeyboardMarkup()
     if user_id in course.user_courses and course.user_courses[user_id].get("course"):
@@ -92,14 +92,12 @@ def get_return_keyboard(user_id):
         keyboard.add(types.InlineKeyboardButton("Начать курс", callback_data="start_course"))
     return keyboard
 
-# Обработчик /start
 @dp.message_handler(Command("start"))
 async def cmd_start(message: types.Message, state: FSMContext):
     logger.info(f"Команда /start от {message.from_user.id}")
     await state.finish()
     await course.start(message, None)
 
-# Обработчик /help
 @dp.message_handler(Command("help"))
 async def cmd_help(message: types.Message, state: FSMContext):
     logger.info(f"Команда /help от {message.from_user.id}")
@@ -123,11 +121,9 @@ async def cmd_help(message: types.Message, state: FSMContext):
     keyboard = get_return_keyboard(message.from_user.id)
     await message.reply(help_text, reply_markup=keyboard, parse_mode="HTML")
 
-# Состояния для отзывов
 class FeedbackState(StatesGroup):
     waiting_for_feedback = State()
 
-# Команда /feedback
 @dp.message_handler(Command("feedback"))
 async def start_feedback(message: types.Message, state: FSMContext):
     logger.info(f"Команда /feedback от {message.from_user.id}")
@@ -144,7 +140,6 @@ async def process_feedback(message: types.Message, state: FSMContext):
     await message.reply("Спасибо за отзыв!", reply_markup=keyboard)
     await state.finish()
 
-# Команда /donate
 @dp.message_handler(Command("donate"))
 async def send_donate(message: types.Message, state: FSMContext):
     logger.info(f"Команда /donate от {message.from_user.id}")
@@ -163,14 +158,12 @@ async def on_startup(_):
 async def on_shutdown(_):
     logger.info("Бот завершает работу...")
 
-# Обработчик для кнопки "Начать курс"
 async def start_course_callback(callback_query: types.CallbackQuery, state: FSMContext):
     await state.finish()
     await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
     await course.start(callback_query.message, None)
     await callback_query.answer()
 
-# Обработчик для кнопки "Вернуться к курсу"
 async def return_to_lesson_callback(callback_query: types.CallbackQuery, state: FSMContext):
     await state.finish()
     user_id = callback_query.from_user.id
@@ -188,4 +181,20 @@ async def return_to_lesson_callback(callback_query: types.CallbackQuery, state: 
 if __name__ == "__main__":
     dp.register_callback_query_handler(start_course_callback, lambda c: c.data == "start_course")
     dp.register_callback_query_handler(return_to_lesson_callback, lambda c: c.data == "return_to_lesson")
-    executor.start_polling(dp, skip_updates=True, on_startup=on_startup, on_shutdown=on_shutdown)
+
+    # Настройки для Webhook
+    WEBHOOK_HOST = os.getenv("RENDER_EXTERNAL_HOSTNAME", "https://coursecraftbot.onrender.com")  # Замени на URL твоего приложения
+    WEBHOOK_PATH = "/webhook"
+    WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
+    WEBAPP_HOST = "0.0.0.0"
+    WEBAPP_PORT = int(os.getenv("PORT", 8000))
+
+    executor.start_webhook(
+        dispatcher=dp,
+        webhook_path=WEBHOOK_PATH,
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        skip_updates=True,
+        host=WEBAPP_HOST,
+        port=WEBAPP_PORT,
+    )

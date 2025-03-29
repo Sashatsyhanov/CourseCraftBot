@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: coursecraftbot
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python bot.py"
+    envVars:
+      - key: TELEGRAM_TOKEN
+        value: "7948372358:AAG8xCMLrFiDePOtiO-_niinJojHUQtED6c"
+      - key: GEMINI_API_KEY
+        value: "AIzaSyDAV171VeefBOwq8Pc1tQ0peT956vVFhhE"
+      - key: DATABASE_URL
+        value: "sqlite:///course_progress.db"
+      - key: RENDER_EXTERNAL_HOSTNAME
+        sync: false
