@@ -3,7 +3,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Command
-from aiogram.dispatcher.filters.state import State, StatesGroup  # Добавляем StatesGroup
+from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.utils import executor
 import os
 import aiosqlite
@@ -48,6 +48,7 @@ donate_button = types.InlineKeyboardMarkup().add(
 
 # Инициализация базы данных
 async def init_db():
+    logger.info(f"Инициализация базы данных: {DB_NAME}")
     async with aiosqlite.connect(DB_NAME) as db:
         await db.execute("""
             CREATE TABLE IF NOT EXISTS user_courses (
@@ -68,6 +69,7 @@ async def init_db():
 # Загрузка данных из базы
 async def load_user_courses():
     user_courses = {}
+    logger.info("Загрузка данных из базы...")
     async with aiosqlite.connect(DB_NAME) as db:
         async with db.execute("SELECT * FROM user_courses") as cursor:
             rows = await cursor.fetchall()
@@ -84,10 +86,12 @@ async def load_user_courses():
                     "goal": row[8],
                     "preferences": row[9]
                 }
+    logger.info(f"Загружено {len(user_courses)} записей из базы")
     return user_courses
 
 # Сохранение данных в базу
 async def save_user_course(user_id, course_data):
+    logger.info(f"Сохранение данных для user_id={user_id}")
     async with aiosqlite.connect(DB_NAME) as db:
         await db.execute("""
             INSERT OR REPLACE INTO user_courses (
@@ -113,7 +117,7 @@ def get_return_keyboard(user_id):
 @dp.message_handler(Command("start"))
 async def cmd_start(message: types.Message, state: FSMContext):
     logger.info(f"Команда /start от {message.from_user.id}")
-    await state.finish()
+    await state.finish()  # Сбрасываем состояние
     await message.reply("Привет! Я CourseCraftBot — твой помощник в обучении! 🚀 Напиши /help, чтобы узнать, что я умею.")
     # Здесь должен быть вызов функции start из handlers.py
     # await course.start(message, None)
@@ -122,7 +126,7 @@ async def cmd_start(message: types.Message, state: FSMContext):
 @dp.message_handler(Command("help"))
 async def cmd_help(message: types.Message, state: FSMContext):
     logger.info(f"Команда /help от {message.from_user.id}")
-    await state.finish()
+    await state.finish()  # Сбрасываем состояние
     help_text = (
         "Привет! Я CourseCraftBot — твой помощник в обучении! 🚀\n\n"
         "<b>Команды:</b>\n"
@@ -150,7 +154,7 @@ class FeedbackState(StatesGroup):
 @dp.message_handler(Command("feedback"))
 async def start_feedback(message: types.Message, state: FSMContext):
     logger.info(f"Команда /feedback от {message.from_user.id}")
-    await state.finish()
+    await state.finish()  # Сбрасываем состояние
     keyboard = get_return_keyboard(message.from_user.id)
     await message.reply("Напиши свой отзыв о курсе! Что понравилось, что улучшить?", reply_markup=keyboard)
     await FeedbackState.waiting_for_feedback.set()
@@ -158,6 +162,7 @@ async def start_feedback(message: types.Message, state: FSMContext):
 # Обработка отзыва
 @dp.message_handler(state=FeedbackState.waiting_for_feedback)
 async def process_feedback(message: types.Message, state: FSMContext):
+    logger.info(f"Получен отзыв от {message.from_user.id}")
     feedback = message.text
     await bot.send_message(795056847, f"Новый отзыв от {message.from_user.id}:\n{feedback}")
     keyboard = get_return_keyboard(message.from_user.id)
@@ -168,13 +173,14 @@ async def process_feedback(message: types.Message, state: FSMContext):
 @dp.message_handler(Command("donate"))
 async def send_donate(message: types.Message, state: FSMContext):
     logger.info(f"Команда /donate от {message.from_user.id}")
-    await state.finish()
+    await state.finish()  # Сбрасываем состояние
     keyboard = get_return_keyboard(message.from_user.id)
     await message.reply("Спасибо за желание помочь! Поддержи проект здесь:", reply_markup=donate_button)
     await message.reply("Выбери действие:", reply_markup=keyboard)
 
 # Callback для начала курса
 async def start_course_callback(callback_query: types.CallbackQuery, state: FSMContext):
+    logger.info(f"Callback start_course от {callback_query.from_user.id}")
     await state.finish()
     await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
     await callback_query.message.reply("Начинаем курс! 🚀")
@@ -184,9 +190,9 @@ async def start_course_callback(callback_query: types.CallbackQuery, state: FSMC
 
 # Callback для возврата к уроку
 async def return_to_lesson_callback(callback_query: types.CallbackQuery, state: FSMContext):
-    await state.finish()
     user_id = callback_query.from_user.id
-    logger.info(f"Возврат к курсу для user_id={user_id}")
+    logger.info(f"Callback return_to_lesson от user_id={user_id}")
+    await state.finish()
     if user_id in user_courses and user_courses[user_id].get("course"):
         logger.info(f"Найден курс: {user_courses[user_id]}")
         await bot.delete_message(chat_id=callback_query.message.chat.id, message_id=callback_query.message.message_id)
@@ -200,6 +206,14 @@ async def return_to_lesson_callback(callback_query: types.CallbackQuery, state: 
         # Здесь должен быть вызов функции start из handlers.py
         # await course.start(callback_query.message, None)
     await callback_query.answer()
+
+# Обработчик всех текстовых сообщений (для отладки)
+@dp.message_handler()
+async def echo_all(message: types.Message, state: FSMContext):
+    logger.info(f"Получено сообщение от {message.from_user.id}: {message.text}")
+    current_state = await state.get_state()
+    logger.info(f"Текущее состояние: {current_state}")
+    await message.reply("Я получил твоё сообщение, но не знаю, что с ним делать. Попробуй команду, например, /help.")
 
 # Функции on_startup и on_shutdown
 async def on_startup(_):
